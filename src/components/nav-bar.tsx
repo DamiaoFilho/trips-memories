@@ -29,7 +29,7 @@ export function NavBar() {
           </Button>
 
           <Button variant={pathname === "/create" ? "default" : "ghost"} size="sm" asChild>
-            <Link href="#">
+            <Link href="/create">
               <Plus className="h-4 w-4" />
               <span>Create</span>
             </Link>
