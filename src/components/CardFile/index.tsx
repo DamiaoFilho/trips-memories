@@ -74,7 +74,7 @@ export default function CardFile({
 
                 <div className="flex items-center text-sm text-muted-foreground">
                   <Calendar className="h-4 w-4 mr-2" />
-                  {new Date(createdAt).toLocaleDateString()}
+                  {new Date(createdAt).toLocaleDateString("pt-BR")}
                 </div>
               </div>
             </div>

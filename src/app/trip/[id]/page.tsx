@@ -81,10 +81,10 @@ export default function CardImageContent() {
               <p className="text-lg opacity-90">{descriptionTrip}</p>
               <div className="flex items-center mt-4 text-sm opacity-75">
                 <Calendar className="h-4 w-4 mr-2" />
-                {new Date(dateTrip).toLocaleDateString()}
+                {new Date(dateTrip).toLocaleDateString('pt-BR')}
               </div>
             </div>
-          </div>
+          </div>  
 
           <div className="flex justify-between items-center mb-8">
             <div className="flex items-center space-x-4">
