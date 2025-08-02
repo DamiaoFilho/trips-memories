@@ -10,7 +10,7 @@ const trip: TripI = {
   name: "Summer Vacation",
   description: "A wonderful trip to the beach with family.",
   createdAt: "2023-08-15T12:00:00Z",
-  coverImage: "https://example.com/cover.jpg"
+  coverImage: "https://images.unsplash.com/photo-1506744038136-46273834b3fb"
 }
 
 export default function Home() {

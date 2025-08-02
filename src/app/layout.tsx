@@ -16,8 +16,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "TripMemories",
-  description: "Your best trip memories",
+  title: "TripMemory",
+  description: "Porque toda viagem merece uma memória",
 };
 
 export default function RootLayout({
