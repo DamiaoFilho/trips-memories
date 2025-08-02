@@ -86,7 +86,6 @@ export default function CardImageContent() {
             </div>
           </div>
 
-          {/* Action Bar */}
           <div className="flex justify-between items-center mb-8">
             <div className="flex items-center space-x-4">
               <Badge variant="secondary" className="text-sm">
