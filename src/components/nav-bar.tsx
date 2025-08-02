@@ -24,14 +24,14 @@ export function NavBar() {
           <Button variant={pathname === "/" ? "default" : "ghost"} size="sm" asChild>
             <Link href="/">
               <List className="h-4 w-4 mr-2" />
-              Trips
+              Viagens
             </Link>
           </Button>
 
           <Button variant={pathname === "/create" ? "default" : "ghost"} size="sm" asChild>
             <Link href="#">
               <Plus className="h-4 w-4 mr-2" />
-              Create
+              Criar
             </Link>
           </Button>
 
