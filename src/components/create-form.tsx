@@ -37,12 +37,12 @@ export default function CreateForm() {
                     name="Trip Name"
                     render={({ field }) => (
                         <FormItem>
-                            <FormLabel>Trip Name</FormLabel>
+                            <FormLabel>Nome da viagem</FormLabel>
                             <FormControl>
-                                <Input placeholder="My Amazing Trip" {...field} />
+                                <Input placeholder="Viagem na praia" {...field} />
                             </FormControl>
                             <FormDescription>
-                                This is your trip name.
+                                Esse é o nome da sua viagem
                             </FormDescription>
                             <FormMessage />
                         </FormItem>
@@ -53,12 +53,12 @@ export default function CreateForm() {
                     name="description"
                     render={({ field }) => (
                         <FormItem>
-                            <FormLabel>Trip Description</FormLabel>
+                            <FormLabel>Descrição da viagem</FormLabel>
                             <FormControl>
-                                <Textarea placeholder="Describe your trip" {...field} />
+                                <Textarea placeholder="Descrever sua viagem" {...field} />
                             </FormControl>
                             <FormDescription>
-                                This description of your trip.
+                                Essa é a descrição da viagem
                             </FormDescription>
                             <FormMessage />
                         </FormItem>
@@ -69,7 +69,7 @@ export default function CreateForm() {
                     name="Date"
                     render={({ field }) => (
                         <FormItem>
-                            <FormLabel>Trip Date</FormLabel>
+                            <FormLabel>Data da Viagem</FormLabel>
                             <FormControl>
                                 <Popover>
                                     <PopoverTrigger asChild>
@@ -84,7 +84,7 @@ export default function CreateForm() {
                                                 {field.value ? (
                                                     format(field.value, "PPP")
                                                 ) : (
-                                                    <span>Pick a date</span>
+                                                    <span>Escolha uma data</span>
                                                 )}
                                                 <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
                                             </Button>
@@ -102,7 +102,7 @@ export default function CreateForm() {
                                 </Popover>
                             </FormControl>
                             <FormDescription>
-                                The date of your trip.
+                                A data da sua viagem.
                             </FormDescription>
                             <FormMessage />
                         </FormItem>
@@ -113,20 +113,20 @@ export default function CreateForm() {
                     name="coverImage"
                     render={({ field }) => (
                         <FormItem>
-                            <FormLabel>Cover Image</FormLabel>
+                            <FormLabel>Imagem de capa</FormLabel>
                             <FormControl>
                                 <Input type="file" accept="image/*" {...field} />
                             </FormControl>
                             <FormDescription>
-                                This is your cover image.
+                                Essa é a sua imagem de capa.
                             </FormDescription>
                             <FormMessage />
                         </FormItem>
                     )}
                 />
                 <section className="flex flex-row items-center space-x-4 justify-around">
-                    <Button className="w-[70%]" type="submit">Create Trip</Button>
-                    <Button className="w-[25%]" variant={"outline"} type="reset">Cancel</Button>
+                    <Button className="w-[70%]" type="submit">Criar viagem</Button>
+                    <Button className="w-[25%]" variant={"outline"} type="reset">Cancelar</Button>
                 </section>
             </form>
         </Form>
