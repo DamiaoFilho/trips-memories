@@ -17,7 +17,7 @@ export function NavBar() {
       <div className="flex flex-row w-[90%] h-16 items-center justify-between">
         <Link href="/" className="flex items-center space-x-2">
           <div className="h-8 w-8 rounded-full bg-primary"></div>
-          <span className="text-xl font-bold">TripMemory</span>
+          <span className="text-xl font-bold">TripMemories</span>
         </Link>
 
         <div className="flex items-center space-x-4">
