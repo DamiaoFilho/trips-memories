@@ -12,21 +12,52 @@ import { useForm } from "react-hook-form";
 import { Button } from "./ui/button";
 import { Textarea } from "./ui/textarea";
 import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
+    Popover,
+    PopoverContent,
+    PopoverTrigger,
 } from "@/components/ui/popover"
 import { CalendarIcon } from "lucide-react";
 import { Calendar } from "./ui/calendar";
 import { cn } from "@/lib/utils";
 import { format } from "date-fns";
+import TripSchema from "@/schemas/trip";
+import z from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useUser } from "@/context/auth";
+import { supabase } from "../../lib/supaBaseClient";
+
 
 export default function CreateForm() {
-    const form = useForm()
+    const { user } = useUser();
+    const form = useForm<z.infer<typeof TripSchema>>({
+        resolver: zodResolver(TripSchema),
+        defaultValues: {
+            tripName: "",
+            description: "",
+        },
+    });
 
-    const onSubmit = (data: any) => {
+    const onSubmit = async (data: any) => {
         console.log("Form submitted with data:", data);
-        // Here you can handle the form submission, e.g., send data to an API
+        try {
+            const file = data.coverImage[0];
+            const filePath = `${user?.id}/${Date.now()}-${file.name}`;
+
+            const { error: uploadError } = await supabase.storage
+                .from('trips')
+                .upload(filePath, file);
+
+            if(uploadError) {
+                throw uploadError;
+            }
+
+            const { data: { publicUrl} } = await supabase.storage
+                .from('trips')
+                .getPublicUrl(filePath);
+
+        }catch (error) {
+            console.error("Error uploading file:", error);
+        }
     }
 
     return (
@@ -34,7 +65,7 @@ export default function CreateForm() {
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
                 <FormField
                     control={form.control}
-                    name="Trip Name"
+                    name="tripName"
                     render={({ field }) => (
                         <FormItem>
                             <FormLabel>Nome da viagem</FormLabel>
@@ -66,7 +97,7 @@ export default function CreateForm() {
                 />
                 <FormField
                     control={form.control}
-                    name="Date"
+                    name="date"
                     render={({ field }) => (
                         <FormItem>
                             <FormLabel>Data da Viagem</FormLabel>
@@ -94,7 +125,7 @@ export default function CreateForm() {
                                         <Calendar
                                             mode="single"
                                             selected={field.value}
-                                            onSelect={field.onChange}                                            
+                                            onSelect={field.onChange}
                                             captionLayout="dropdown"
                                             lang="pt"
                                         />
