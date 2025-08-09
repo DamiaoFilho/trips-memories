@@ -25,38 +25,64 @@ import z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useUser } from "@/context/auth";
 import { supabase } from "../../lib/supaBaseClient";
-
+import { toast } from "sonner";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
 
 export default function CreateForm() {
+    const [isSubmitting, setIsSubmitting] = useState(false);
+    const router = useRouter();
     const { user } = useUser();
     const form = useForm<z.infer<typeof TripSchema>>({
         resolver: zodResolver(TripSchema),
         defaultValues: {
             tripName: "",
             description: "",
+            date: undefined,
+            coverImage: undefined,
         },
     });
 
     const onSubmit = async (data: any) => {
         console.log("Form submitted with data:", data);
+        setIsSubmitting(true);
         try {
             const file = data.coverImage[0];
-            const filePath = `${user?.id}/${Date.now()}-${file.name}`;
+            const filePath = `${file.name}`;
 
             const { error: uploadError } = await supabase.storage
-                .from('trips')
+                .from('uploads')
                 .upload(filePath, file);
 
-            if(uploadError) {
+            if (uploadError) {
                 throw uploadError;
             }
-
-            const { data: { publicUrl} } = await supabase.storage
-                .from('trips')
+            console.log("File uploaded successfully:", filePath);
+            const { data: { publicUrl } } = await supabase.storage
+                .from('uploads')
                 .getPublicUrl(filePath);
 
-        }catch (error) {
+            const { error: insertError } = await supabase
+                .from('trip')
+                .insert({
+                    user_id: user?.id,
+                    name: data.tripName,
+                    description: data.description,
+                    date: data.date,
+                    cover_image_url: publicUrl,
+                });
+
+            if (insertError) {
+                throw insertError;
+            }
+
+            toast.success("Viagem criada com sucesso!");
+            router.push("/");
+        } catch (error: any) {
             console.error("Error uploading file:", error);
+            toast.error(`Erro ao criar viagem: ${error.message}`);
+        } finally {
+            setIsSubmitting(false);
         }
     }
 
@@ -142,11 +168,16 @@ export default function CreateForm() {
                 <FormField
                     control={form.control}
                     name="coverImage"
-                    render={({ field }) => (
+                    render={({ field: { value, onChange, ...fieldProps } }) => (
                         <FormItem>
                             <FormLabel>Imagem de capa</FormLabel>
                             <FormControl>
-                                <Input type="file" accept="image/*" {...field} />
+                                <Input 
+                                    type="file" 
+                                    accept="image/*" 
+                                    onChange={(e) => onChange(e.target.files)}
+                                    {...fieldProps} 
+                                />
                             </FormControl>
                             <FormDescription>
                                 Essa é a sua imagem de capa.
@@ -156,7 +187,7 @@ export default function CreateForm() {
                     )}
                 />
                 <section className="flex flex-row items-center space-x-4 justify-around">
-                    <Button className="w-[70%]" type="submit">Criar viagem</Button>
+                    <Button className="w-[70%]" type="submit" disabled={isSubmitting}>Criar viagem</Button>
                     <Button className="w-[25%]" variant={"outline"} type="reset">Cancelar</Button>
                 </section>
             </form>
