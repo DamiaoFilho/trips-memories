@@ -3,10 +3,16 @@ import type { NextConfig } from "next";
 const nextConfig: NextConfig = {
   /* config options here */
   images: {
-    domains: ["images.unsplash.com"],
+    domains: [
+      "media.istockphoto.com",
+      "images.unsplash.com",
+      "ytvrwllrzqeggfguskzs.supabase.co",
+    ],
     remotePatterns: [
-      new URL('https://ytvrwllrzqeggfguskzs.supabase.co/storage/v1/object/public/**')
-    ]
+      new URL(
+        "https://ytvrwllrzqeggfguskzs.supabase.co/storage/v1/object/public/**"
+      ),
+    ],
   },
 };
 
