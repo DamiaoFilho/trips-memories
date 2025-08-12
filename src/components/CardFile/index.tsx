@@ -79,7 +79,7 @@ export default function CardFile({
               >
                 <div className="mb-4">
                   <Badge variant="outline" className="mb-2">
-                    {mediaType === "video/mp4" ? "Video" : "Photo"}
+                    {mediaType === "video" ? "Video" : "Foto"}
                   </Badge>
                   <h3 className="text-2xl font-bold mb-2">{title}</h3>
                   <p className="text-muted-foreground leading-relaxed">

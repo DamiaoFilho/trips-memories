@@ -16,4 +16,5 @@ export interface TripI {
   cover_img: string
   user_id: string
   date: string
+  log: TripLogI[]
 }

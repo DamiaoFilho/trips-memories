@@ -16,8 +16,8 @@ export default function Home() {
       setLoading(true);
       const { data, error } = await supabase
         .from("trip")
-        .select("*")
-        .order("created_at", { ascending: false });
+        .select("*, log(*)")
+        .order("date", { ascending: false });
       if (error) {
         console.error("Erro ao buscar viagens:", error.message);
       } else if (data) {

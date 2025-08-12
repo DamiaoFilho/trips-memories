@@ -46,7 +46,12 @@ interface AddLogModalProps {
   onLogAdded?: () => void;
 }
 
-export function ModalAddFile({ isOpen, onClose, tripId, onLogAdded }: AddLogModalProps) {
+export function ModalAddFile({
+  isOpen,
+  onClose,
+  tripId,
+  onLogAdded,
+}: AddLogModalProps) {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { user } = useUser();
 
@@ -63,7 +68,7 @@ export function ModalAddFile({ isOpen, onClose, tripId, onLogAdded }: AddLogModa
   const onSubmit = async (data: z.infer<typeof LogSchema>) => {
     setIsSubmitting(true);
     try {
-      const file = data.mediaFile[0];
+      const file = data.mediaFile;
       const filePath = `${user?.id}/logs/${Date.now()}-${file.name}`;
 
       const { error: uploadError } = await supabase.storage
@@ -78,16 +83,14 @@ export function ModalAddFile({ isOpen, onClose, tripId, onLogAdded }: AddLogModa
         data: { publicUrl },
       } = await supabase.storage.from("uploads").getPublicUrl(filePath);
 
-      const { error: insertError } = await supabase
-        .from("log")
-        .insert({
-          trip_id: tripId,
-          title: data.title,
-          description: data.description,
-          media_type: data.mediaType,
-          url: publicUrl,
-          created_at: new Date().toISOString(),
-        });
+      const { error: insertError } = await supabase.from("log").insert({
+        trip_id: tripId,
+        title: data.title,
+        description: data.description,
+        media_type: data.mediaType,
+        url: publicUrl,
+        created_at: new Date().toISOString(),
+      });
 
       if (insertError) {
         throw insertError;
@@ -188,10 +191,20 @@ export function ModalAddFile({ isOpen, onClose, tripId, onLogAdded }: AddLogModa
                     <Input
                       type="file"
                       accept=".jpg,.jpeg,.png,.mp4,image/jpeg,image/png,video/mp4"
-                      onChange={(e) => onChange(e.target.files)}
+                      onChange={(e) => {
+                        const files = e.target.files;
+                        if (files && files.length > 0) {
+                          onChange(files[0]);
+                        } else {
+                          onChange(undefined);
+                        }
+                      }}
                       {...fieldProps}
                     />
                   </FormControl>
+                  <FormDescription>
+                    Tamanho máximo permitido 50MB
+                  </FormDescription>
                   <FormMessage />
                 </FormItem>
               )}
