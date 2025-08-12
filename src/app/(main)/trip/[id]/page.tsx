@@ -6,24 +6,38 @@ import { Button } from "@/components/ui/button";
 import { useParams, useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
 import Image from "next/image";
-import { ArrowLeft, Calendar, Plus } from "lucide-react";
+import { ArrowLeft, Calendar, Plus, Trash2 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { motion } from "framer-motion";
 import { supabase } from "../../../../../lib/supaBaseClient";
 import { TripI, TripLogI } from "@/types/trips";
+import { useUser } from "@/context/auth";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
+import { toast } from "sonner";
 
 export default function CardImageContent() {
   const params = useParams();
   const router = useRouter();
+  const { user } = useUser();
   
   const [trip, setTrip] = useState<TripI | null>(null);
   const [logs, setLogs] = useState<TripLogI[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
 
   const tripId = params.id as string;
-
-  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const fetchLogs = async () => {
     try {
@@ -45,6 +59,8 @@ export default function CardImageContent() {
 
   useEffect(() => {
     const fetchTripData = async () => {
+      if (!user) return;
+      
       try {
         setLoading(true);
         
@@ -52,6 +68,7 @@ export default function CardImageContent() {
           .from('trip')
           .select('*')
           .eq('id', tripId)
+          .eq('user_id', user.id)
           .single();
 
         if (tripError) {
@@ -68,10 +85,44 @@ export default function CardImageContent() {
       }
     };
 
-    if (tripId) {
+    if (tripId && user) {
       fetchTripData();
     }
-  }, [tripId]);
+  }, [tripId, user]);
+
+  const handleDeleteTrip = async () => {
+    setIsDeleting(true);
+    try {
+      // First delete all logs associated with this trip
+      const { error: logsError } = await supabase
+        .from('log')
+        .delete()
+        .eq('trip_id', tripId);
+
+      if (logsError) {
+        throw logsError;
+      }
+
+      // Then delete the trip
+      const { error: tripError } = await supabase
+        .from('trip')
+        .delete()
+        .eq('id', tripId)
+        .eq('user_id', user?.id);
+
+      if (tripError) {
+        throw tripError;
+      }
+
+      toast.success("Viagem excluída com sucesso!");
+      router.push("/");
+    } catch (error: any) {
+      console.error("Error deleting trip:", error);
+      toast.error(`Erro ao excluir viagem: ${error.message}`);
+    } finally {
+      setIsDeleting(false);
+    }
+  };
 
   if (loading) {
     return (
@@ -106,15 +157,47 @@ export default function CardImageContent() {
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.5, ease: "easeOut" }}
+            className="flex justify-between items-center mb-4"
           >
             <Button
               variant="ghost"
               onClick={() => router.push("/")}
-              className="mb-4 cursor-pointer"
+              className="cursor-pointer"
             >
               <ArrowLeft className="h-4 w-4 mr-2" />
               Voltar para a página principal
             </Button>
+
+            <AlertDialog>
+              <AlertDialogTrigger asChild>
+                <Button
+                  variant="destructive"
+                  size="sm"
+                  disabled={isDeleting}
+                >
+                  <Trash2 className="h-4 w-4 mr-2" />
+                  Excluir Viagem
+                </Button>
+              </AlertDialogTrigger>
+              <AlertDialogContent>
+                <AlertDialogHeader>
+                  <AlertDialogTitle>Excluir viagem</AlertDialogTitle>
+                  <AlertDialogDescription>
+                    Tem certeza que deseja excluir a viagem "{trip?.name}"? Esta ação irá excluir permanentemente a viagem e todas as suas memórias. Esta ação não pode ser desfeita.
+                  </AlertDialogDescription>
+                </AlertDialogHeader>
+                <AlertDialogFooter>
+                  <AlertDialogCancel>Cancelar</AlertDialogCancel>
+                  <AlertDialogAction
+                    onClick={handleDeleteTrip}
+                    disabled={isDeleting}
+                    className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+                  >
+                    {isDeleting ? "Excluindo..." : "Excluir Viagem"}
+                  </AlertDialogAction>
+                </AlertDialogFooter>
+              </AlertDialogContent>
+            </AlertDialog>
           </motion.div>
 
           <motion.div 
@@ -124,10 +207,10 @@ export default function CardImageContent() {
             transition={{ duration: 0.8, delay: 0.2, ease: "easeOut" }}
           >
             <Image
-              src={
-                trip.cover_img ||
-                "/placeholder.svg?height=400&width=800&query=travel landscape"
-              }
+              src={trip.cover_img}
+              placeholder="blur"
+              blurDataURL="/img-placeholder.png"
+              quality={100}
               alt={trip.name}
               fill
               className="object-cover"
@@ -174,6 +257,7 @@ export default function CardImageContent() {
                 title={log.title}
                 description={log.description}
                 createdAt={log.created_at}
+                onDelete={fetchLogs}
               />
             ))}
           </div>

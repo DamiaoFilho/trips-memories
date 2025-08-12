@@ -19,7 +19,9 @@ import { supabase } from "../../lib/supaBaseClient"
 import { useRouter } from "next/navigation"
 import { useState } from "react"
 import { Sheet, SheetContent, SheetTrigger, SheetTitle } from "@/components/ui/sheet"
-
+import logo from "../../public/logo.png"
+import Image from "next/image"
+import { User } from "lucide-react"
 export function NavBar() {
   const pathname = usePathname()
   const { user } = useUser()
@@ -41,7 +43,7 @@ export function NavBar() {
     <nav className="flex flex-row justify-center items-center w-full border-b-1">
       <div className="flex flex-row w-[90%] h-16 items-center justify-between">
         <Link href="/" className="flex items-center space-x-2">
-          <div className="h-8 w-8 rounded-full bg-primary"></div>
+          <Image src={logo} alt="Logo" className="rounded-full" width={32} height={32} />
           <span className="text-xl font-bold">TripMemories</span>
         </Link>
 
@@ -65,13 +67,17 @@ export function NavBar() {
             <DropdownMenuTrigger>
               <Avatar>
                 <AvatarImage src={user?.user_metadata?.avatar_url} />
-                <AvatarFallback>{user?.user_metadata?.name}</AvatarFallback>
+                <AvatarFallback>
+                  <span className="flex items-center justify-center w-full h-full">
+                  <User className="h-4 w-4" />
+                  </span>
+                </AvatarFallback>
               </Avatar>
             </DropdownMenuTrigger>
             <DropdownMenuContent>
               <DropdownMenuLabel>Meu Perfil</DropdownMenuLabel>
               <DropdownMenuSeparator />
-              <DropdownMenuItem><button onClick={handleSignOut}>Sair</button></DropdownMenuItem>
+              <DropdownMenuItem><button className="text-start w-full" onClick={handleSignOut}>Sair</button></DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
         </div>
