@@ -16,7 +16,7 @@ import {
     PopoverContent,
     PopoverTrigger,
 } from "@/components/ui/popover"
-import { CalendarIcon } from "lucide-react";
+import { CalendarIcon, Loader2Icon } from "lucide-react";
 import { Calendar } from "./ui/calendar";
 import { cn } from "@/lib/utils";
 import { format } from "date-fns";
@@ -48,7 +48,7 @@ export default function CreateForm() {
         setIsSubmitting(true);
         try {
             const file = data.coverImage[0];
-            const filePath = `${file.name}`;
+            const filePath = `${user?.id}/${Date.now()}-${file.name}`;
 
             const { error: uploadError } = await supabase.storage
                 .from('uploads')
@@ -57,10 +57,12 @@ export default function CreateForm() {
             if (uploadError) {
                 throw uploadError;
             }
-            console.log("File uploaded successfully:", filePath);
+
             const { data: { publicUrl } } = await supabase.storage
                 .from('uploads')
                 .getPublicUrl(filePath);
+
+            console.log("Public URL:", publicUrl);
 
             const { error: insertError } = await supabase
                 .from('trip')
@@ -69,7 +71,7 @@ export default function CreateForm() {
                     name: data.tripName,
                     description: data.description,
                     date: data.date,
-                    cover_image_url: publicUrl,
+                    cover_img: publicUrl,
                 });
 
             if (insertError) {
@@ -187,7 +189,7 @@ export default function CreateForm() {
                     )}
                 />
                 <section className="flex flex-row items-center space-x-4 justify-around">
-                    <Button className="w-[70%]" type="submit" disabled={isSubmitting}>Criar viagem</Button>
+                    <Button className="w-[70%]" type="submit" disabled={isSubmitting}>{isSubmitting ? <Loader2Icon className="animate-spin" /> : "Criar viagem"}</Button>
                     <Button className="w-[25%]" variant={"outline"} type="reset">Cancelar</Button>
                 </section>
             </form>
