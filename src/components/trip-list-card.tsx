@@ -52,7 +52,7 @@ export default function TripListCard({ trip, index = 0 }: TripListCardProps) {
                                 height={400}
                                 blurDataURL={"/img-placeholder"}
                                 placeholder="blur"
-                                src={trip.coverImage as string}
+                                src={trip.cover_img as string}
                                 alt="coverImg"
                             />
                             <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
@@ -66,7 +66,7 @@ export default function TripListCard({ trip, index = 0 }: TripListCardProps) {
                         <div className="flex flex-row w-full justify-between">
                             <div className="flex flex-row text-sm items-center gap-2">
                                 <Calendar className="h-4 w-4"/>
-                                {new Date(trip.createdAt).toLocaleDateString('pt-BR')}
+                                {new Date(trip.created_at).toLocaleDateString('pt-BR')}
                             </div>
                             <Badge variant={"secondary"}>2 memories</Badge>
                         </div>

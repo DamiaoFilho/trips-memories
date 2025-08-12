@@ -11,8 +11,10 @@ export interface TripLogI {
 
 export interface TripI {
   id: string
+  created_at: string
   name: string
   description: string
-  createdAt: string
-  coverImage?: string
+  cover_img: string
+  user_id: number
+  date: string
 }
