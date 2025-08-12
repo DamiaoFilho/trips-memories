@@ -8,6 +8,7 @@ import { useState } from "react";
 import Image from "next/image";
 import { ArrowLeft, Calendar, Plus } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
+import { motion } from "framer-motion";
 
 export default function CardImageContent() {
   const params = useParams();
@@ -45,6 +46,39 @@ export default function CardImageContent() {
         poster: "https://images.unsplash.com/photo-1506744038136-46273834b3fb",
       },
     },
+    {
+      id: 3,
+      title: "Trilha na Montanha",
+      description: "Aventura e belas paisagens durante a trilha.",
+      createdAt: "2025-06-20T08:00:00Z",
+      media: {
+        type: "video/mp4",
+        url: "/videos/music_video.mp4",
+        poster: "https://images.unsplash.com/photo-1506744038136-46273834b3fb",
+      },
+    },
+    {
+      id: 4,
+      title: "Trilha na Montanha",
+      description: "Aventura e belas paisagens durante a trilha.",
+      createdAt: "2025-06-20T08:00:00Z",
+      media: {
+        type: "video/mp4",
+        url: "/videos/music_video.mp4",
+        poster: "https://images.unsplash.com/photo-1506744038136-46273834b3fb",
+      },
+    },
+    {
+      id: 5,
+      title: "Trilha na Montanha",
+      description: "Aventura e belas paisagens durante a trilha.",
+      createdAt: "2025-06-20T08:00:00Z",
+      media: {
+        type: "video/mp4",
+        url: "/videos/music_video.mp4",
+        poster: "https://images.unsplash.com/photo-1506744038136-46273834b3fb",
+      },
+    },
   ];
   // ##########################################################################
 
@@ -54,16 +88,27 @@ export default function CardImageContent() {
     <>
       <div className="min-h-screen bg-gradient-to-br from-primary/5 to-background">
         <div className="container mx-auto px-4 py-8">
-          <Button
-            variant="ghost"
-            onClick={() => router.push("/")}
-            className="mb-4 cursor-pointer"
+          <motion.div
+            initial={{ opacity: 0, x: -20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.5, ease: "easeOut" }}
           >
-            <ArrowLeft className="h-4 w-4 mr-2" />
-            Voltar para a página principal
-          </Button>
+            <Button
+              variant="ghost"
+              onClick={() => router.push("/")}
+              className="mb-4 cursor-pointer"
+            >
+              <ArrowLeft className="h-4 w-4 mr-2" />
+              Voltar para a página principal
+            </Button>
+          </motion.div>
 
-          <div className="relative h-64 md:h-80 rounded-xl overflow-hidden mb-6">
+          <motion.div 
+            className="relative h-64 md:h-80 rounded-xl overflow-hidden mb-6"
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.2, ease: "easeOut" }}
+          >
             <Image
               src={
                 coverImage ||
@@ -84,9 +129,14 @@ export default function CardImageContent() {
                 {new Date(dateTrip).toLocaleDateString('pt-BR')}
               </div>
             </div>
-          </div>  
+          </motion.div>
 
-          <div className="flex justify-between items-center mb-8">
+          <motion.div 
+            className="flex justify-between items-center mb-8"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.6, ease: "easeOut" }}
+          >
             <div className="flex items-center space-x-4">
               <Badge variant="secondary" className="text-sm">
                 {filesTrip.length} memórias
@@ -96,12 +146,13 @@ export default function CardImageContent() {
               <Plus className="h-4 w-4 mr-2" />
               Adicione uma memória
             </Button>
-          </div>
+          </motion.div>
 
           <div className="space-y-8">
             {filesTrip.map((log, index) => (
               <CardFile
                 key={index}
+                index={index}
                 id={log.id}
                 mediaUrl={log.media.url}
                 mediaType={log.media.type}

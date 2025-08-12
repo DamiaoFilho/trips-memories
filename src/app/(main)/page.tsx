@@ -26,9 +26,10 @@ export default function Home() {
           className="pl-10"
         />
       </div>
-
-      <section className="flex flex-row">
-        <TripListCard trip={trip}/>
+      <section className="flex flex-row flex-wrap gap-6 justify-center">
+        {Array.from({ length: 3 }).map((_, idx) => (
+          <TripListCard key={idx} trip={trip} index={idx} />
+        ))}
       </section>
 
     </main>
