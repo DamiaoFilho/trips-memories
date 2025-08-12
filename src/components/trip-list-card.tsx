@@ -41,11 +41,12 @@ export default function TripListCard({ trip, index = 0 }: TripListCardProps) {
               <Image
                 className="rounded-t-md"
                 width={400}
-                height={400}
+                height={240}
                 blurDataURL={"/img-placeholder"}
                 placeholder="blur"
                 src={trip.cover_img as string}
                 alt="coverImg"
+                style={{ objectFit: "cover", width: "100%", height: "240px" }}
               />
               <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
               <div className="absolute bottom-6 left-6 text-white">
@@ -64,7 +65,7 @@ export default function TripListCard({ trip, index = 0 }: TripListCardProps) {
                 <Calendar className="h-4 w-4" />
                 {new Date(trip.created_at).toLocaleDateString("pt-BR")}
               </div>
-              <Badge variant={"secondary"}>{trip.log.length} memories</Badge>
+              <Badge variant={"secondary"}>{trip.log.length} memórias</Badge>
             </div>
           </CardContent>
         </Link>
