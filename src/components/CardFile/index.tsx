@@ -1,9 +1,8 @@
 import { Card, CardContent } from "../ui/card";
-
 import Image from "next/image";
 import { Badge } from "../ui/badge";
-
 import { Calendar, Play } from "lucide-react";
+import { motion } from "framer-motion";
 
 interface CardFileProps {
   id: number;
@@ -13,6 +12,7 @@ interface CardFileProps {
   title: string;
   description: string;
   createdAt: string;
+  index?: number;
 }
 
 export default function CardFile({
@@ -23,25 +23,38 @@ export default function CardFile({
   title,
   description,
   createdAt,
+  index = 0,
 }: CardFileProps) {
   return (
     <>
-      <div className="space-y-8">
-        <Card key={id} className="overflow-hidden hover:shadow-lg">
+      <motion.div 
+        className="space-y-8"
+        initial={{ opacity: 0, y: 30 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ 
+          duration: 0.6, 
+          delay: index * 0.2,
+          ease: "easeOut" 
+        }}
+      >
+        <Card key={id} className="overflow-hidden hover:shadow-lg transition-shadow duration-300">
           <CardContent className="p-0">
             <div className="md:flex">
-              <div className="relative md:w-1/2 h-64 md:h-80">
-                <Image
-                  src={mediaUrl || "/placeholder.svg"}
-                  alt={title}
-                  fill
-                  className="object-cover"
-                />
-                {mediaType === "video/mp4" ? (
+              <motion.div 
+                className="relative md:w-1/2 h-64 md:h-80"
+                initial={{ opacity: 0, x: -20 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ 
+                  duration: 1, 
+                  delay: index * 0.2 + 0.2,
+                  ease: "easeOut" 
+                }}
+              >
+                {mediaType === "video" ? (
                   <video
                     src={mediaUrl}
                     controls
-                    className="object-cover w-full h-full"
+                    className="object-cover w-full h-full rounded-2xl p-2"
                     poster={mediaPoster || "/placeholder.svg"}
                   />
                 ) : (
@@ -49,19 +62,21 @@ export default function CardFile({
                     src={mediaUrl || "/placeholder.svg"}
                     alt={title}
                     fill
-                    className="object-cover"
+                    className="object-cover p-2 rounded-2xl"
                   />
                 )}
-                {mediaType === "video/mp4" && (
-                  <div className="absolute inset-0 flex items-center justify-center bg-black/20 pointer-events-none">
-                    <div className="bg-white/90 rounded-full p-4">
-                      <Play className="h-8 w-8 text-black" />
-                    </div>
-                  </div>
-                )}
-              </div>
+              </motion.div>
 
-              <div className="md:w-1/2 p-6 flex flex-col justify-center">
+              <motion.div 
+                className="md:w-1/2 p-6 flex flex-col justify-center"
+                initial={{ opacity: 0, x: 20 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ 
+                  duration: 0.5, 
+                  delay: index * 0.2 + 0.3,
+                  ease: "easeOut" 
+                }}
+              >
                 <div className="mb-4">
                   <Badge variant="outline" className="mb-2">
                     {mediaType === "video/mp4" ? "Video" : "Photo"}
@@ -76,11 +91,11 @@ export default function CardFile({
                   <Calendar className="h-4 w-4 mr-2" />
                   {new Date(createdAt).toLocaleDateString("pt-BR")}
                 </div>
-              </div>
+              </motion.div>
             </div>
           </CardContent>
         </Card>
-      </div>
+      </motion.div>
     </>
   );
 }

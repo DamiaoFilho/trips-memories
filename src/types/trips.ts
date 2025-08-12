@@ -1,18 +1,19 @@
 export interface TripLogI {
-  id: string
+  id: number
+  created_at: string
+  media_type: string
+  url: string
   title: string
   description: string
-  media: {
-    type: "image" | "video"
-    url: string
-  }
-  createdAt: string
+  trip_id: number
 }
 
 export interface TripI {
-  id: string
+  id: number
+  created_at: string
   name: string
   description: string
-  createdAt: string
-  coverImage?: string
+  cover_img: string
+  user_id: string
+  date: string
 }

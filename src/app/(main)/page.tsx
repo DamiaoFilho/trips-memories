@@ -6,11 +6,13 @@ import TripListCard from "@/components/trip-list-card";
 import { TripI } from "@/types/trips";
 
 const trip: TripI = {
-  id: "1",
+  id: 6,
   name: "Férias de verão",
   description: "Uma viagem na praia com a família.",
-  createdAt: "2023-08-15T12:00:00Z",
-  coverImage: "https://images.unsplash.com/photo-1506744038136-46273834b3fb"
+  created_at: "2023-08-15T12:00:00Z",
+  cover_img: "https://images.unsplash.com/photo-1506744038136-46273834b3fb",
+  user_id: "1",
+  date: "2023-08-15T12:00:00Z"
 }
 
 export default function Home() {
@@ -26,9 +28,10 @@ export default function Home() {
           className="pl-10"
         />
       </div>
-
-      <section className="flex flex-row">
-        <TripListCard trip={trip}/>
+      <section className="flex flex-row flex-wrap gap-6 justify-center">
+        {Array.from({ length: 3 }).map((_, idx) => (
+          <TripListCard key={idx} trip={trip} index={idx} />
+        ))}
       </section>
 
     </main>
