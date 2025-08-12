@@ -6,12 +6,12 @@ import TripListCard from "@/components/trip-list-card";
 import { TripI } from "@/types/trips";
 
 const trip: TripI = {
-  id: "6",
+  id: 6,
   name: "Férias de verão",
   description: "Uma viagem na praia com a família.",
   created_at: "2023-08-15T12:00:00Z",
   cover_img: "https://images.unsplash.com/photo-1506744038136-46273834b3fb",
-  user_id: 1,
+  user_id: "1",
   date: "2023-08-15T12:00:00Z"
 }
 

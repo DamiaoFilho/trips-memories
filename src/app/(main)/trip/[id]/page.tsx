@@ -23,8 +23,25 @@ export default function CardImageContent() {
 
   const tripId = params.id as string;
 
-
   const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const fetchLogs = async () => {
+    try {
+      const { data: logsData, error: logsError } = await supabase
+        .from('log')
+        .select('*')
+        .eq('trip_id', tripId)
+        .order('created_at', { ascending: false });
+
+      if (logsError) {
+        throw logsError;
+      }
+
+      setLogs(logsData || []);
+    } catch (err) {
+      console.error('Error fetching logs:', err);
+    }
+  };
 
   useEffect(() => {
     const fetchTripData = async () => {
@@ -43,17 +60,7 @@ export default function CardImageContent() {
 
         setTrip(tripData);
 
-        const { data: logsData, error: logsError } = await supabase
-          .from('log')
-          .select('*')
-          .eq('trip_id', tripId)
-          .order('created_at', { ascending: false });
-
-        if (logsError) {
-          throw logsError;
-        }
-
-        setLogs(logsData || []);
+        await fetchLogs();
       } catch (err) {
         setError(err instanceof Error ? err.message : 'An error occurred');
       } finally {
@@ -161,12 +168,12 @@ export default function CardImageContent() {
                 key={log.id}
                 index={index}
                 id={log.id}
-                mediaUrl={log.media.url}
-                mediaType={log.media.type}
-                mediaPoster={log.media.poster}
+                mediaUrl={log.url}
+                mediaType={log.media_type}
+                mediaPoster={log.media_type}
                 title={log.title}
                 description={log.description}
-                createdAt={log.createdAt}
+                createdAt={log.created_at}
               />
             ))}
           </div>
@@ -175,6 +182,7 @@ export default function CardImageContent() {
             isOpen={isModalOpen}
             onClose={() => setIsModalOpen(false)}
             tripId={tripId}
+            onLogAdded={fetchLogs}
           />
         </div>
       </div>

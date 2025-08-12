@@ -50,7 +50,7 @@ export default function CardFile({
                   ease: "easeOut" 
                 }}
               >
-                {mediaType === "video/mp4" ? (
+                {mediaType === "video" ? (
                   <video
                     src={mediaUrl}
                     controls

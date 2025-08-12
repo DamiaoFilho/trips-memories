@@ -48,7 +48,7 @@ export default function CreateForm() {
         setIsSubmitting(true);
         try {
             const file = data.coverImage[0];
-            const filePath = `${user?.id}/${Date.now()}-${file.name}`;
+            const filePath = `${user?.id}/trips/${Date.now()}-${file.name}`;
 
             const { error: uploadError } = await supabase.storage
                 .from('uploads')
